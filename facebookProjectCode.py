@@ -30,13 +30,4 @@ def facebook():
     fp.close()
 facebook()
 
-'''
-    friends = ':'.join(friends)
-    friends = friends.replace(':','')
-    new = friends.maketrans(':','')
-    friends.translate(new)
-    print(friends[0])
 
-'''
-'''for x in range(len(friends)):
-        friends[x] = friends[x].strip'''
