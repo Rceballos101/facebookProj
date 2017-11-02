@@ -1,47 +1,129 @@
+"""
+File of function stubs for Projecct 07
 
+@author: Nesquick & the Don
+@sidenotes: done while listening to serious EDM (https://www.youtube.com/watch?v=0b0hkCRagR4)
+"""
+# Uncomment the following lines when you run the run_file tests
+# so the input shows up in the output file.
+#
+#import sys
+#def input( prompt=None ):
+#    if prompt != None:
+#        print( prompt, end="" )
+#    aaa_str = sys.stdin.readline()
+#    aaa_str = aaa_str.rstrip( "\n" )
+#    print( aaa_str )
+#    return aaa_str
+#
 
-def facebook():
-    fp = open('C:/python/project/small_network_data.txt','r')#location of test data
-    #convert to input when final
-    n = fp.readline() # number of users in network
+def open_file():
+    ''' Prompt the user for a valid filepath to open'''
+    global fp
+    fp = ''
+    while fp == '':
+        fileName = input('Enter file path: ')    
+        fp = open(fileName,'r')    
+    return fp
+
+#   'C:/Users/Sen/Desktop/small_network_data.txt'
+
+def read_file(fp):  
+    '''read file and create a list of friend_id per user'''
+    # Read n and initizlize the network to have n empty lists -- 
+    #    one empty list for each member of the network
+    global network
+    global n
+    
+    n = fp.readline()
     n = int(n)
-    network = [] #holds all users friends
-    
+    network = []
     for i in range(n):
-        network.append([]) #creates a list of each user and there friends
+        network.append([])  
+
+    for lines in fp:
+        line = lines.split()
+        user = eval(line[0])
+        friend = eval(line[1])
+
+        network[user].append(friend)
+        network[friend].append(user)
+
+    return network
+    return n
+    # You need to write the code to fill in the network as you read the file
+    # Hint: append appropriate values to the appropriate lists.
+    # Each iteration of the loop will have two appends -- why?
+
+def num_in_common_between_lists(list1, list2):
+    '''number of common elements between 2 lists'''
+    global friendCount
     
-    friends = fp.readlines() #list of each user and 1 of there friends
+    friendCount = 0
+    for l1 in list1:
+        for l2 in list2:
+            if l1 == l2:
+                friendCount += 1 
+    return friendCount
 
-    for y in range(len(friends)):#eliminates white space from each list
-        friends[y] = friends[y].strip()
 
-    users = []#list of users
+def init_matrix(n):
+    '''Create an n x n matrix, initialize with zeros, and return the matrix.'''
+    global matrix
+    matrix = []
     
+    for row in range(n):  # for each of the n rows
+        matrix.append([])  # create the row and initialize as empty
+        for column in range(n):
+            matrix[row].append(0)  # append a 0 for each of the n columns
+    return matrix
+    
+def calc_similarity_scores(network):  
+    ''' use the empty n x n matrix and compute the common elements for each x and y combinations'''
+    global similarity_matrix
+    similarity_matrix = matrix
 
-    for j in friends:#creates list of users
-        group = j.split(' ')#splits row into 2 friends     
-        for k in group:
-            if k not in users:
-                users.append(k)
-    print('Our users are ',users)
-        
-        
-    for f in friends:#inputs user followed by his friends in a list
-        group = f.split(' ')#splits row into 2 friends
-        f1 = eval(group[0])
-        f2 = eval(group[1])
-        if group[0] not in network[f1]:
-            network[f1].append(group[0])
-        if group[1] not in network[f2]:   
-            network[f2].append(group[1])
-        if group[0] not in network[f2]:
-            network[f2].append(group[0])
-        lst = eval(group[0])#user
-        network[lst].append(group[1])
-        if group[0] not in network[lst]:
-            network[lst].append(group[0])
-        
+    for i in range(n):
+        for j in range(i+1):
+            num_in_common_between_lists(network[i], network[j])
+            similarity_matrix[i][j] = friendCount
+            similarity_matrix[j][i] = friendCount
+
+    return similarity_matrix
+
+
+
+def recommend(user_id,network,matrix):
+    ''' Remember the docstring'''
+    
+    global recommendedFriend   
+    possibleFriends = similarity_matrix[user_id]
+    
+    maxListIndex = []
+    maxListChar = []
+
+    for i, ch in enumerate(possibleFriends):
+        if i != user_id:
+            if i not in network[user_id]:
+                maxListIndex.append(i)
+                maxListChar.append(ch)
+
+    bestHitChar = max(maxListChar)
+    bestHitIndex = maxListChar.index(bestHitChar)
+    recommendedFriend = maxListIndex[bestHitIndex]
+
+    print ('{} recommended friend is user {}'.format(user_id,recommendedFriend))
+    
                 
-    print(network)#testing purposes only
-    fp.close()
-facebook()
+def main():
+    global user_id
+    
+    open_file()
+    read_file(fp)
+    init_matrix(n)
+    calc_similarity_scores(network)
+    
+    user_id = eval(input('Enter a number (0:N): '))
+    recommend(user_id,network,matrix)
+    
+main()
