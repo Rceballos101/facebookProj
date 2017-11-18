@@ -4,19 +4,6 @@ File of function stubs for Projecct 07
 @author: Nesquick & the Don
 @sidenotes: done while listening to serious EDM (https://www.youtube.com/watch?v=0b0hkCRagR4)
 """
-# Uncomment the following lines when you run the run_file tests
-# so the input shows up in the output file.
-#
-#import sys
-#def input( prompt=None ):
-#    if prompt != None:
-#        print( prompt, end="" )
-#    aaa_str = sys.stdin.readline()
-#    aaa_str = aaa_str.rstrip( "\n" )
-#    print( aaa_str )
-#    return aaa_str
-#
-
 def open_file():
     ''' Prompt the user for a valid filepath to open'''
     global fp
@@ -123,7 +110,10 @@ def main():
     init_matrix(n)
     calc_similarity_scores(network)
     
-    user_id = eval(input('Enter a number (0:N): '))
-    recommend(user_id,network,matrix)
-    
+    contin = ''
+    while contin != 'N':
+        user_id = eval(input('Enter a number (0:N): '))
+        recommend(user_id,network,matrix)
+        contin = input('/nContinue [Y/N]: ')
+
 main()
