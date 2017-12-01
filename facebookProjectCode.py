@@ -11,9 +11,15 @@ def open_file():
     ''' Prompt the user for a valid filepath to open where network data is saved'''
     global fp
     fp = ''
-    while fp == '':
-        fileName = input('Enter file path: ')#path where data is saved
-        fp = open(fileName,'r')    
+    while True:
+        fileName = input('Enter file path: ')
+        try:
+            fp = open(fileName,'r')  
+            if fp != "":
+               break
+        except:
+           print("\nNo such file, Stop wasting my time!\n")
+                  
     return fp
 
 #   'C:/python/project/facebook_1000_data.txt'
@@ -102,11 +108,11 @@ def recommend(user_id,network,matrix):
                 maxListChar.append(ch)
 
     bestHitChar = max(maxListChar)
-    bestHitIndex = maxListChar.index(bestHitChar)
-    recommendedFriend = maxListIndex[bestHitIndex]
-
-    print ('\nUser {} recommended friend is user {}'.format(user_id,recommendedFriend))
-    
+    print('-'*70)
+    for j,ch2 in enumerate(maxListChar):
+        if ch2 == bestHitChar:
+            print ('user {} recommended friend is user {}'.format(user_id,maxListIndex[j]))
+    print('-'*70)
                 
 def main():
     global user_id
