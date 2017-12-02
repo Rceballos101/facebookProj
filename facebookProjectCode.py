@@ -128,7 +128,7 @@ def main():
         user_id = n+1
         while type(user_id) != int or int(user_id) > n or int(user_id) < 0:
             try:
-                user_id = int(input('\nEnter an integer in the range 0 to {}: '.format(n)))
+                user_id = int(input('\nEnter an integer in the range 0 to {}: '.format(n-1)))
             except:
                 print('This is not an integer ')
                 
